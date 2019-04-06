@@ -42,7 +42,8 @@ class BaseConfigAdmin(BaseAdmin):
               for f in ('preview.js',
                         'unsaved_changes.js',
                         'uuid.js',
-                        'switcher.js')]
+                        'switcher.js',
+                        'template-admin.js')]
 
     def get_extra_context(self, pk=None):
         prefix = 'admin:{0}_{1}'.format(self.opts.app_label, self.model.__name__.lower())

@@ -1,3 +1,6 @@
+import collections
+
+from jsonfield import JSONField
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -9,6 +12,12 @@ from .base import BaseConfig
 TYPE_CHOICES = (
     ('generic', _('Generic')),
     ('vpn', _('VPN-client')),
+)
+
+FLAG_CHOICES = (
+    ('private', _('Private')),
+    ('public', _('Public')),
+    ('shared_secret', _('Shared Secret'))
 )
 
 
@@ -53,6 +62,21 @@ class AbstractTemplate(BaseConfig):
                                                 'be automatically managed behind the scenes '
                                                 'for each configuration using this template, '
                                                 'valid only for the VPN type'))
+    flag = models.CharField(_('Flag'),
+                            choices=FLAG_CHOICES,
+                            max_length=16,
+                            default='private',
+                            help_text=_('Please choose if this template should be '
+                                        'Public, Private or shared secretly'))
+
+    variable = JSONField(_('context'),
+                         null=True,
+                         blank=True,
+                         help_text=_('Provide values for the list of variables found at the '
+                                     'detail page of this template at the Library'),
+                         load_kwargs={'object_pair_hook': collections.OrderedDict},
+                         dump_kwargs={'indent': 4})
+
     __template__ = True
 
     class Meta:
