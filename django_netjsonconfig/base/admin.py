@@ -335,6 +335,7 @@ class AbstractTemplateAdmin(BaseConfigAdmin):
     fields = ['name',
               'type',
               'backend',
+              'variable',
               'vpn',
               'auto_cert',
               'tags',
