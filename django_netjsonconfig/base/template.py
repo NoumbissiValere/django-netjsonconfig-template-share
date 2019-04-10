@@ -1,6 +1,3 @@
-import collections
-
-from jsonfield import JSONField
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -8,6 +5,8 @@ from taggit.managers import TaggableManager
 
 from ..settings import DEFAULT_AUTO_CERT
 from .base import BaseConfig
+from ..utils import get_random_key
+from ..validators import key_validator
 
 TYPE_CHOICES = (
     ('generic', _('Generic')),
@@ -17,7 +16,8 @@ TYPE_CHOICES = (
 FLAG_CHOICES = (
     ('private', _('Private')),
     ('public', _('Public')),
-    ('shared_secret', _('Shared Secret'))
+    ('shared_secret', _('Shared Secret')),
+     ('import', _('Import'))
 )
 
 
@@ -62,6 +62,19 @@ class AbstractTemplate(BaseConfig):
                                                 'be automatically managed behind the scenes '
                                                 'for each configuration using this template, '
                                                 'valid only for the VPN type'))
+    flag = models.CharField(_('Flag'),
+                            choices=FLAG_CHOICES,
+                            default='private',
+                            max_length=16,
+                            db_index=True,
+                            help_text=_('Whether to keep this template private or make it '
+                                        'public, shared secretly or imported'))
+    key = models.CharField(max_length=64,
+                           unique=True,
+                           db_index=True,
+                           default=get_random_key,
+                           validators=[key_validator],
+                           help_text=_('share template key'))
 
     __template__ = True
 

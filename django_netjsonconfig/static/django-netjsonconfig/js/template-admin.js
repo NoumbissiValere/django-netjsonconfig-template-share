@@ -1,35 +1,42 @@
 django.jQuery(function ($) {
     'use strict';
-    var operationType = $('.field-operation_type select');
+    var flag = $('.field-flag select');
     $('.jsoneditor-wrapper').hide()
     // enable switcher only in add forms
-    if (!operationType.length || $('form .deletelink-box').length > 0) {
-        $('.field-operation_type').hide();
-        $('.field-url').hide();
-        return;
-    }
-    // function for operation_type switcher
+//    if (!flag.length || $('form .deletelink-box').length > 0) {
+//        $('.field-url').hide();
+//        $('.field-va')
+//        return;
+//    }
+    // function for flag_type switcher
     var showFields = function () {
         // define fields for each operation
-        var importFields = $('.form-row:not(.field-url, .field-operation_type, ' +
-                          '.field-variable, .field-default, .field-created, .field-modified)'),
-            newFields = $('.form-row:not(.field-url, .field-variable, .field-config)'),
-            defaultFields = $('.form-row:not(.field-operation_type)'),
+        var importFields = $('.form-row:not(.field-name, .field-type, .field-backend, .field-vpn, '+
+                          '.field-auto_cert, .field-tags, .field-config, .field-organization, '+
+                          '.field-description, .field-notes, .field-key)'),
+            publicFields = $('.form-row:not(.field-url, .field-config, .field-key)'),
+            shareFields = $('.form-row:not(.field-url, .field-config)'),
+            privateFields = $('.form-row:not(.field-url, .field-variable, .field-description, '+
+                                            '.field-notes, .field-config, .field-key)'),
             allFields = $('.form-row'),
-            value = operationType.val();
-        if (value === '-') {
-            allFields.show();
-            defaultFields.hide();
-        }
-        if (value === 'new') {
+            value = flag.val();
+        if (value === 'private') {
             allFields.hide();
-            newFields.show();
+            privateFields.show();
+        }
+        if (value === 'public') {
+            allFields.hide();
+            publicFields.show();
+        }
+        if (value === 'shared_secret'){
+            allFields.hide();
+            shareFields.show();
         }
         if (value === 'import') {
-            allFields.show();
-            importFields.hide();
+            allFields.hide();
+            importFields.show();
         }
-        if (value === '-' || value === 'import'){
+        if (value === 'import'){
             $('.jsoneditor-wrapper').hide();
         }
         else{
@@ -37,7 +44,7 @@ django.jQuery(function ($) {
         }
     };
     showFields();
-    operationType.on('change', function (e) {
+    flag.on('change', function (e) {
         showFields();
     });
 });
