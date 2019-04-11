@@ -6,8 +6,8 @@ django.jQuery(function ($) {
     // function for flag_type switcher
     var showFields = function () {
         // define fields for each operation
-        var importFields = $('.form-row:not(.field-name, .field-type, .field-backend, .field-vpn, '+
-                          '.field-auto_cert, .field-tags, .field-config, .field-description, '+
+        var importFields = $('.form-row:not(.field-type, .field-backend, .field-vpn, .field-tags, '+
+                          '.field-auto_cert, .field-config, .field-description, '+
                           '.field-notes, .field-key, .field-variable)'),
             publicFields = $('.form-row:not(.field-url, .field-config, .field-key)'),
             shareFields = $('.form-row:not(.field-url, .field-config)'),
