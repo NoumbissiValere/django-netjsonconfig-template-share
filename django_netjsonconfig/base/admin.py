@@ -336,7 +336,7 @@ if not app_settings.BACKEND_DEVICE_LIST:  # pragma: nocover
 
 
 class AbstractTemplateAdmin(BaseConfigAdmin):
-    list_display = ['name', 'type', 'backend', 'flag', 'url', 'default', 'created', 'modified']
+    list_display = ['name', 'type', 'backend', 'flag', 'default', 'created', 'modified']
     list_filter = ['backend', 'type', 'default', 'created']
     search_fields = ['name']
     fields = ['flag',
