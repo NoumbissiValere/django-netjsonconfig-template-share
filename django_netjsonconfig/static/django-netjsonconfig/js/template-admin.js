@@ -7,8 +7,8 @@ django.jQuery(function ($) {
     var showFields = function () {
         // define fields for each operation
         var importFields = $('.form-row:not(.field-name, .field-type, .field-backend, .field-vpn, '+
-                          '.field-auto_cert, .field-tags, .field-config, .field-organization, '+
-                          '.field-description, .field-notes, .field-key, .field-variable)'),
+                          '.field-auto_cert, .field-tags, .field-config, .field-description, '+
+                          '.field-notes, .field-key, .field-variable)'),
             publicFields = $('.form-row:not(.field-url, .field-config, .field-key)'),
             shareFields = $('.form-row:not(.field-url, .field-config)'),
             privateFields = $('.form-row:not(.field-url, .field-variable, .field-description, '+
