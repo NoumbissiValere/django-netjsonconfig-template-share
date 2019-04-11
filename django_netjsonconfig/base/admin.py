@@ -39,7 +39,8 @@ class BaseConfigAdmin(BaseAdmin):
     class Media:
         css = {'all': (static('{0}css/admin.css'.format(prefix)),)}
         js = [static('{0}js/{1}'.format(prefix, f))
-              for f in ('preview.js',
+              for f in ('tabs.js',
+                        'preview.js',
                         'unsaved_changes.js',
                         'uuid.js',
                         'switcher.js',
@@ -124,6 +125,9 @@ class BaseConfigAdmin(BaseAdmin):
             # put regular field values in kwargs dict
             else:
                 kwargs[key] = value
+        # default context to None to avoid exception
+        if 'context' in kwargs:
+            kwargs['context'] = kwargs['context'] or None
         # this object is instanciated only to generate the preview
         # it won't be saved to the database
         instance = config_model(**kwargs)
@@ -215,6 +219,9 @@ class BaseForm(forms.ModelForm):
 
 
 class AbstractConfigForm(BaseForm):
+    def get_temp_model_instance(self, **options):
+        return self.Meta.model(**options)
+
     def clean_templates(self):
         config_model = self.Meta.model
         # copy cleaned_data to avoid tampering with it
@@ -223,7 +230,7 @@ class AbstractConfigForm(BaseForm):
         if self.instance._state.adding:
             # when adding self.instance is empty, we need to create a
             # temporary instance that we'll use just for validation
-            config = config_model(**data)
+            config = self.get_temp_model_instance(**data)
         else:
             config = self.instance
         if config.backend and templates:
@@ -329,7 +336,7 @@ if not app_settings.BACKEND_DEVICE_LIST:  # pragma: nocover
 
 
 class AbstractTemplateAdmin(BaseConfigAdmin):
-    list_display = ['name', 'type', 'backend', 'flag', 'url', 'default', 'created', 'modified']
+    list_display = ['name', 'type', 'backend', 'flag', 'default', 'created', 'modified']
     list_filter = ['backend', 'type', 'default', 'created']
     search_fields = ['name']
     fields = ['flag',

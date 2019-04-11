@@ -2,18 +2,13 @@ django.jQuery(function ($) {
     'use strict';
     var flag = $('.field-flag select');
     $('.jsoneditor-wrapper').hide()
-    // enable switcher only in add forms
-//    if (!flag.length || $('form .deletelink-box').length > 0) {
-//        $('.field-url').hide();
-//        $('.field-va')
-//        return;
-//    }
+
     // function for flag_type switcher
     var showFields = function () {
         // define fields for each operation
         var importFields = $('.form-row:not(.field-name, .field-type, .field-backend, .field-vpn, '+
                           '.field-auto_cert, .field-tags, .field-config, .field-organization, '+
-                          '.field-description, .field-notes, .field-key)'),
+                          '.field-description, .field-notes, .field-key, .field-variable)'),
             publicFields = $('.form-row:not(.field-url, .field-config, .field-key)'),
             shareFields = $('.form-row:not(.field-url, .field-config)'),
             privateFields = $('.form-row:not(.field-url, .field-variable, .field-description, '+
