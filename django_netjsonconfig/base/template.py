@@ -1,3 +1,8 @@
+from collections import OrderedDict
+import json, urllib.request
+from jsonfield import JSONField
+
+from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -75,6 +80,20 @@ class AbstractTemplate(BaseConfig):
                            default=get_random_key,
                            validators=[key_validator],
                            help_text=_('share template key'))
+    description = models.TextField(_('Description'),
+                                   blank=True,
+                                   null=True,
+                                   help_text=_('Enter public description of this template'))
+    notes = models.TextField(_('Notes'),
+                             blank=True,
+                             null=True,
+                             help_text=_('Enter internal notes for the administrators'))
+    variable = JSONField(_('Variable'),
+                         default=dict,
+                         blank=True,
+                         help_text=_('Enter Values for the variables used by this template'),
+                         load_kwargs={'object_pairs_hook': OrderedDict},
+                         dump_kwargs={'indent': 4})
 
     __template__ = True
 
@@ -122,6 +141,36 @@ class AbstractTemplate(BaseConfig):
             self.auto_cert = False
         if self.type == 'vpn' and not self.config:
             self.config = self.vpn.auto_client(auto_cert=self.auto_cert)
+        if self.flag == 'public' or self.flag == 'shared_secret':
+            if not self.description:
+                raise ValidationError({'description': _('Please enter public description of '
+                                                        'shared template')})
+            if not self.notes:
+                raise ValidationError({'notes': _('Please enter notes used by administrations of '
+                                                  'shared template')})
+            if self.variable == {}:
+                raise ValidationError({'variable': _('Please enter default values for variables ')})
+        if self.flag == 'import':
+            if self.url is None:
+                raise ValidationError({'url': _('Please enter the Url to import template from')})
+            else:
+                try:
+                    with urllib.request.urlopen(self.url) as response:
+                        try:
+                            data = json.loads(response.read().decode())
+                            self.id = data['id']
+                            self.type = data['type']
+                            self.config = json.dumps(eval(data['config']))
+                            self.url = data['url']
+                            self.variable = json.dumps(eval(data['variable']))
+                            self.vpn = data['vpn']
+                            self.auto_cert = data['auto_cert']
+                            self.backend = data['backend']
+                            #self.key = data['key']
+                        except ValueError:
+                            raise ValidationError({'url', _('Url is not valid')})
+                except urllib.request.HTTPError:
+                    raise ValidationError({'url': _('Url is not valid. Please check it')})
 
 
 AbstractTemplate._meta.get_field('config').blank = True

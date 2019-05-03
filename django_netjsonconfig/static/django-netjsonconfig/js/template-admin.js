@@ -7,12 +7,15 @@ django.jQuery(function ($) {
     var showFields = function () {
         // define fields for each operation
         var importFields = $('.form-row:not(.field-type, .field-backend, .field-vpn, .field-tags, '+
-                          '.field-auto_cert, .field-config, .field-description, '+
-                          '.field-notes, .field-key, .field-variable)'),
-            publicFields = $('.form-row:not(.field-url, .field-config, .field-key)'),
-            shareFields = $('.form-row:not(.field-url, .field-config)'),
+                                            '.field-auto_cert, .field-config, .field-description, '+
+                                            '.field-notes, .field-key, .field-variable)'),
+            publicFields = $('.form-row:not(.field-url, .field-config, .field-key, .field-subscribe, '+
+                                            '.field-unsubscribe)'),
+            shareFields = $('.form-row:not(.field-url, .field-config, .field-subscribe, '+
+                                            '.field-unsubscribe)'),
             privateFields = $('.form-row:not(.field-url, .field-variable, .field-description, '+
-                                            '.field-notes, .field-config, .field-key)'),
+                                            '.field-notes, .field-config, .field-key, '+
+                                            '.field-subscribe)'),
             allFields = $('.form-row'),
             value = flag.val();
         if (value === 'private') {

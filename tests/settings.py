@@ -26,7 +26,10 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'sortedm2m',
     'reversion',
-    'django_x509'
+    'django_x509',
+    # rest framework
+    'rest_framework',
+    'rest_framework_gis'
 ]
 
 MIDDLEWARE = [
